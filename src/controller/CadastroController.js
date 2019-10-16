@@ -2,6 +2,12 @@ const user = []
 module.exports = {
 
 
+   retornaLengList() {
+     var index = user.length
+    return index
+  },
+
+
   async store(req, res) {
 
     const {id, title} = req.body;
@@ -18,9 +24,8 @@ module.exports = {
 
   async index(req, res) {
 
-    var index = user.length
 
-    if(index == 0) return res.status(400).json({erro: 'Não ha conteundo para listar'})
+    if(user.length == 0) return res.status(400).json({erro: 'Não ha conteundo para listar'})
 
   res.status(200).json({user})
 
@@ -29,22 +34,35 @@ module.exports = {
   async delete(req, res) {
 
     const {id} = req.params
-    const index = user.indexOf(id)
-    console.log(index)
-    user.splice(index, 1)    
+
+    if(user.length == 0) {
+      return res.status(200).json({mgs: 'nao a intens para serem removidos'})
+    }
+
+    user.splice(id, 1) 
     return res.status(200).json(user)
 
   },
-
   async update(req, res) {
-
-    const {id} = req.params
     const {task} = req.body
-    const index = user.indexOf(id)
 
-    return res.status(200).json({user})
-   
+    var index = user.length
 
+    if(index == 0) {
+      return res.status(200).json({mgs: 'nao a intens para serem atualizados'})
+    }
+
+    user.map((elem, index)=> {
+
+      const {id, title} = user[req.params.id]
+
+      if(id == index) {
+        user[index] = {id, title, task}
+      }
+
+    })
+
+    return res.status(200).json(user)
   }
 
 }
